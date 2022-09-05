@@ -13,8 +13,10 @@
                     <brand>{{ offer.brand }}</brand>
                 {% endif %}
                 <availabilities>
-                    <availability available="yes" storeId="myFavoritePickupPoint1"/>
-                    <availability available="yes" storeId="myFavoritePickupPoint2"/>
+                    {% for store in stores %}
+                        <availability available="{% if store in offer.available_stores.all %}yes{% else %}no{% endif %}"
+                                      storeId="{{ store.marketplace_store_id }}"/>
+                    {% endfor %}
                 </availabilities>
                 <price>6418</price>
             </offer>
