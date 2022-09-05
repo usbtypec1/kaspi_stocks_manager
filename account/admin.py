@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, Company, Offer, OfferAvailability, OffersStore
+from .models import User, Company, Offer, OffersStore
 
 admin.site.unregister(Group)
 
@@ -21,11 +21,6 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(OfferAvailability)
-class OfferAvailabilityAdmin(admin.ModelAdmin):
     pass
 
 

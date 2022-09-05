@@ -67,12 +67,7 @@ class Offer(models.Model):
     name = models.CharField(max_length=255)
     brand = models.CharField(max_length=255, null=True, blank=True)
     price = models.IntegerField()
+    available_stores = models.ManyToManyField(OffersStore, null=True, blank=True)
 
     def __str__(self):
         return self.name
-
-
-class OfferAvailability(models.Model):
-    product = models.ForeignKey(Offer, on_delete=models.CASCADE)
-    store = models.ForeignKey(OffersStore, on_delete=models.CASCADE)
-    is_available = models.BooleanField()
