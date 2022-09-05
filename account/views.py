@@ -9,7 +9,7 @@ from django.views.generic import FormView, ListView, DetailView, TemplateView, R
 from django.views.generic.edit import FormMixin, ProcessFormView
 
 from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm
-from .models import Company, Offer
+from .models import Company, Offer, OffersStore
 
 
 class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
@@ -61,7 +61,8 @@ def xml_data_view(request, company_uuid):
     company = get_object_or_404(Company, uuid=company_uuid)
     offers = Offer.objects.filter(company__uuid=company_uuid)
     now = timezone.now() + datetime.timedelta(hours=3)
-    context = {'date': now.date().isoformat(), 'company': company, 'offers': offers}
+    context = {'date': now.date().isoformat(), 'company': company, 'offers': offers,
+               'stores': OffersStore.objects.filter(company=company)}
     return render(request, 'account/offers.xml', context=context, content_type='text/xml')
 
 
