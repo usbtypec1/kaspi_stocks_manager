@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kaspi_catalog date="{{ date }}"
+               xmlns="kaspiShopping"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="kaspiShopping http://kaspi.kz/kaspishopping.xsd">
+    <company>{{ company.name }}</company>
+    <merchantid>{{ company.merchant_id }}</merchantid>
+    <offers>
+        {% for offer in offers %}
+            <offer sku="{{ offer.sku }}">
+                <model>{{ offer.name }}</model>
+                {% if offer.brand %}
+                    <brand>{{ offer.brand }}</brand>
+                {% endif %}
+                <availabilities>
+                    <availability available="yes" storeId="myFavoritePickupPoint1"/>
+                    <availability available="yes" storeId="myFavoritePickupPoint2"/>
+                </availabilities>
+                <price>6418</price>
+            </offer>
+        {% endfor %}
+    </offers>
+</kaspi_catalog>
+

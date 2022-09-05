@@ -1,0 +1,36 @@
+{% extends '../base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    Магазины
+{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <div class="row px-2 my-4">
+            {% for company in companies %}
+                <a class="card-body text-decoration-none card my-3 shadow"
+                   href="{% url 'companies__detail' company.id %}"
+                   role="button">
+                    <h5 class="card-title">Магазин: {{ company.name }}</h5>
+                </a>
+                <div class="col-sm-12 col-md-6 offset-md-3">
+                    {% include '../components/forms/create_company.html' with form_legend='Добавить новый магазин' %}
+                </div>
+            {% empty %}
+                <div id="no-companies" class="row align-items-center">
+                    <div class="col-4">
+                        <div class="d-flex flex-column">
+                            {% include '../components/forms/create_company.html' with form_legend='Вы еще не добавили ни один магазин' %}
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <img alt="no company banner" src="{% static 'account/assets/svg/no_company.svg' %}">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}

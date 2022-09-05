@@ -1,0 +1,20 @@
+{% extends '../base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Страница не найдена
+{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <div class="row align-items-center mt-5">
+            <div class="col-lg-4 col-sm-12">
+                <h1 class="text-body text-center">Страница не найдена</h1>
+            </div>
+            <div class="col-lg-8 col-sm-12">
+                <img class="w-100" src="{% static 'account/assets/svg/404.svg' %}" alt="404 not found">
+            </div>
+        </div>
+    </main>
+{% endblock %}
