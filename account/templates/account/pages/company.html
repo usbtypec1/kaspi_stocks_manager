@@ -36,26 +36,11 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <button class="btn btn-danger">Удалить</button>
-            <div class="d-flex">
-                <button id="js-xml-copy-clipboard" type="button" class="btn btn-secondary border rounded-0"
-                        data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-custom-class="custom-tooltip"
-                        data-bs-title="This top tooltip is themed via CSS variables.">
-                    Скопировать
-                </button>
-                <input id="js-xml-file-link" class="form-control border rounded-0" readonly
-                       value="http://{{ request.get_host }}{% url 'offers__xml' company.uuid %}">
-
+            <div>
+                <p>Ваша ссылка для XML файла</p>
+                <input id="js-xml-file-link" class="form-control border rounded-0"
+                       value="http://{{ request.get_host }}{% url 'offers__xml' company.uuid %}" readonly>
             </div>
-            <script>
-                const offersXMLURLInput = document.querySelector('#js-xml-file-link')
-                {#const offersXMLClipboardCopyButton = document.querySelector('#js-xml-copy-clipboard')#}
-
-                offersXMLURLInput.onclick = () => {
-                    navigator.clipboard.writeText(offersXMLURLInput.value).then()
-                }
-            </script>
         {% else %}
             {% include '../components/forms/create_offer.html' with form_legend="Нет товаров" %}
         {% endif %}
