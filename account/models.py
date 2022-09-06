@@ -58,6 +58,10 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'магазин'
+        verbose_name_plural = 'магазины'
+
 
 class OffersStore(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -66,6 +70,10 @@ class OffersStore(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'склад'
+        verbose_name_plural = 'склады'
 
 
 class Offer(models.Model):
@@ -78,3 +86,7 @@ class Offer(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'товар'
+        verbose_name_plural = 'товары'
