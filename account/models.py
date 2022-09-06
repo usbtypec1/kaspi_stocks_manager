@@ -44,6 +44,10 @@ class User(auth_models.AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def save(self, *args, **kwargs):
+        self.username = get_random_string(32)
+        return super().save(*args, **kwargs)
+
 
 class Company(models.Model):
     uuid = models.UUIDField(default=uuid4, unique=True, editable=False)
