@@ -60,6 +60,9 @@ class OffersStore(models.Model):
     name = models.CharField(max_length=255)
     marketplace_store_id = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class Offer(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
