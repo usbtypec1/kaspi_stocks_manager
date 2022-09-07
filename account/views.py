@@ -2,10 +2,19 @@ import datetime
 
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import FormView, ListView, DetailView, TemplateView, RedirectView, DeleteView, UpdateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    TemplateView,
+    RedirectView,
+    DeleteView,
+    UpdateView,
+    CreateView,
+)
 from django.views.generic.edit import FormMixin, ProcessFormView
 
 from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm
@@ -26,6 +35,13 @@ class OfferUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'offer_id'
     form_class = CreateOfferForm
 
+    def get_object(self, queryset=None):
+        offer_id = self.kwargs.get('offer_id')
+        offer = get_object_or_404(Offer, id=offer_id)
+        if offer.company.user != self.request.user:
+            raise PermissionDenied
+        return offer
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data |= {'company_id': self.kwargs['company_id']}
@@ -35,20 +51,17 @@ class OfferUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
 
 
-class OffersListView(LoginRequiredMixin, ListView):
-    template_name = 'account/components/offers.html'
-    queryset = Offer.objects.all()
-    context_object_name = 'offers'
-
-
 class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
     template_name = 'account/pages/companies.html'
-    queryset = Company.objects.all()
+    model = Company
     form_class = CreateCompanyForm
     context_object_name = 'companies'
     success_url = reverse_lazy('companies__index')
 
     post = ProcessFormView.post
+
+    def get_queryset(self):
+        return Company.objects.filter(user=self.request.user)
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -57,12 +70,18 @@ class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
 
 
 class CompanyView(LoginRequiredMixin, DetailView):
-    queryset = Company.objects.all()
     model = Company
     pk_url_kwarg = 'company_id'
     context_object_name = 'company'
     extra_context = {'form': CreateOfferForm()}
     template_name = 'account/pages/company.html'
+
+    def get_object(self, queryset=None):
+        company_id = self.kwargs.get('company_id')
+        company = get_object_or_404(Company, id=company_id)
+        if company.user != self.request.user:
+            raise PermissionDenied
+        return company
 
     def post(self, *args, company_id=None, **kwargs):
         print(args)
@@ -100,7 +119,7 @@ class LoginView(auth_views.LoginView):
     redirect_authenticated_user = True
 
 
-class RegisterView(FormView):
+class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'account/registration/register.html'
 
