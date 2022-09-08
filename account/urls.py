@@ -10,7 +10,15 @@ from .views import (
     xml_data_view,
     OfferDeleteView,
     OfferUpdateView,
+    StoresListView,
+    StoreCreateView,
 )
+
+
+stores_patterns = [
+    path('', StoresListView.as_view(), name='stores__list'),
+    path('create/', StoreCreateView.as_view(), name='stores__create'),
+]
 
 
 companies_patterns = [
@@ -27,4 +35,5 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='accounts__register'),
     path('', AccountsIndexView.as_view(), name='accounts__index'),
     path('companies/', include(companies_patterns)),
+    path('stores/', include(stores_patterns)),
 ]

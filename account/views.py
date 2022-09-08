@@ -17,7 +17,7 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormMixin, ProcessFormView
 
-from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm
+from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateStoreForm
 from .models import Company, Offer, OffersStore
 
 
@@ -137,3 +137,21 @@ class LogoutView(auth_views.LogoutView):
 class AccountsIndexView(RedirectView):
     permanent = True
     pattern_name = 'companies__index'
+
+
+class StoreCreateView(LoginRequiredMixin, CreateView):
+    success_url = reverse_lazy('stores__list')
+    form_class = CreateStoreForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class StoresListView(LoginRequiredMixin, ListView):
+    template_name = 'account/pages/stores.html'
+    context_object_name = 'stores'
+    extra_context = {'form': CreateStoreForm()}
+
+    def get_queryset(self):
+        return OffersStore.objects.filter(user=self.request.user)

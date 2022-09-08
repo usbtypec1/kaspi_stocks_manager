@@ -1,0 +1,53 @@
+{% extends '../base.html' %}
+
+{% block title %}
+    Склады
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row my-3">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Название склада</th>
+                    <th>ID склада</th>
+                    <th style="max-width: 5%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for store in stores %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ store.name }}</td>
+                        <td>{{ store.marketplace_store_id }}</td>
+                        <td>
+                            <a class="btn btn-warning">Изменить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+            {% for store in stores %}
+                <a href="" class="card-body text-decoration-none card my-3 shadow" role="button">
+                    {{ store.name }}
+                </a>
+            {% endfor %}
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <form action="{% url 'stores__create' %}" method="post">
+                    {% csrf_token %}
+                    {% if stores %}
+                        {% include '../components/forms/create_store.html' with form_legend="Добавить склад" %}
+                    {% else %}
+                        {% include '../components/forms/create_store.html' with form_legend="Нету складов" %}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
