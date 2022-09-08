@@ -1,0 +1,29 @@
+{% load widget_tweaks %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'account/assets/styles/forms.css' %}">
+{% endblock %}
+
+<form action="{% url 'stores__list' %}" method="post" class="my-3">
+    {% csrf_token %}
+    <legend class="lead text-center mb-4">{{ form_legend }}</legend>
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Название склада</label>
+        {{ form.name | add_class:"form-control" }}
+        <p class="form-text">Указывать строго как маркетплейсе</p>
+    </div>
+    <div class="mb-3">
+        <label for="{{ form.marketplace_store_id.id_for_label }}" class="form-label">ID склада</label>
+        {{ form.marketplace_store_id | add_class:"form-control" }}
+        <p class="form-text">Указывать строго как маркетплейсе</p>
+    </div>
+    {% for key, errors in form.errors.items %}
+        {% for error in errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <button class="btn btn-secondary" type="submit">Добавить</button>
+</form>

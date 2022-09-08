@@ -1,7 +1,7 @@
 from django.contrib.auth import forms as auth_forms
 from django import forms
 
-from .models import User, Company, Offer
+from .models import User, Company, Offer, OffersStore
 
 
 class UserCreationForm(auth_forms.UserCreationForm):
@@ -26,3 +26,9 @@ class CreateOfferForm(forms.ModelForm):
     class Meta:
         model = Offer
         fields = ('sku', 'name', 'brand', 'price', 'available_stores')
+
+
+class CreateStoreForm(forms.ModelForm):
+    class Meta:
+        model = OffersStore
+        fields = ('name', 'marketplace_store_id')
