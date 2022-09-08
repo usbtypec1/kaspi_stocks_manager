@@ -64,7 +64,7 @@ class Company(models.Model):
 
 
 class OffersStore(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     marketplace_store_id = models.CharField(max_length=255)
 
