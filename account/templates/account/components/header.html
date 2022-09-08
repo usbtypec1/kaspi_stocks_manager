@@ -33,6 +33,11 @@
                             Помощь
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{% url 'stores__list' %}" class="nav-link">
+                            Склады
+                        </a>
+                    </li>
                 </ul>
                 {% if user.is_authenticated %}
                     <button class="btn btn-outline-secondary rounded-pill" data-bs-toggle="modal"
