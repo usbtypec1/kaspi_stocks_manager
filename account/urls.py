@@ -12,12 +12,14 @@ from .views import (
     OfferUpdateView,
     StoresListView,
     StoreCreateView,
+    StoreUpdateView,
 )
 
 
 stores_patterns = [
     path('', StoresListView.as_view(), name='stores__list'),
     path('create/', StoreCreateView.as_view(), name='stores__create'),
+    path('<int:store_id>/', StoreUpdateView.as_view(), name='stores__update'),
 ]
 
 

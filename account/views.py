@@ -155,3 +155,14 @@ class StoresListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return OffersStore.objects.filter(user=self.request.user)
+
+
+class StoreUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'account/pages/store.html'
+    context_object_name = 'store'
+    form_class = CreateStoreForm
+    pk_url_kwarg = 'store_id'
+    success_url = reverse_lazy('stores__list')
+
+    def get_object(self, store_id=None):
+        return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'))
