@@ -23,7 +23,7 @@
                     <div class="mb-3">
                         <label for="{{ form.name.id_for_label }}" class="form-label">Название склада</label>
                         {{ form.name | add_class:"form-control" }}
-                        <p class="form-text">Указывать строго как маркетплейсе</p>
+                        <p class="form-text">Любое название</p>
                     </div>
                     <div class="mb-3">
                         <label for="{{ form.marketplace_store_id.id_for_label }}" class="form-label">ID склада</label>
@@ -37,8 +37,9 @@
                             </div>
                         {% endfor %}
                     {% endfor %}
-                    <button class="btn btn-secondary" type="submit">Изменить</button>
-                    <a class="btn btn-danger" href="">Удалить</a>
+                    <a class="btn btn-secondary" href="{% url 'stores__list' %}">Назад</a>
+                    <button class="btn btn-success" type="submit">Изменить</button>
+                    <a class="btn btn-danger" href="{% url 'stores__delete' store.id %}">Удалить</a>
                 </form>
             </div>
         </div>
