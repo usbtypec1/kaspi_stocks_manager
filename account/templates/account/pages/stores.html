@@ -1,11 +1,19 @@
 {% extends '../base.html' %}
 
+{% load widget_tweaks %}
+{% load static %}
+
 {% block title %}
     Склады
 {% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'account/assets/styles/forms.css' %}">
+{% endblock %}
+
 {% block body %}
     <div class="container">
+        {% if stores  %}
         <div class="row my-3">
             <table class="table">
                 <thead>
@@ -13,7 +21,7 @@
                     <th>№</th>
                     <th>Название склада</th>
                     <th>ID склада</th>
-                    <th style="max-width: 5%"></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -23,29 +31,43 @@
                         <td>{{ store.name }}</td>
                         <td>{{ store.marketplace_store_id }}</td>
                         <td>
-                            <a class="btn btn-warning">Изменить</a>
+                            <a href="{% url 'stores__update' store.id %}" class="btn btn-warning">Изменить</a>
                         </td>
                     </tr>
                 {% endfor %}
-
-
                 </tbody>
             </table>
-            {% for store in stores %}
-                <a href="" class="card-body text-decoration-none card my-3 shadow" role="button">
-                    {{ store.name }}
-                </a>
-            {% endfor %}
         </div>
+    {% endif %}
         <div class="row justify-content-center">
             <div class="col-sm-12 col-md-6 col-xl-4">
-                <form action="{% url 'stores__create' %}" method="post">
+                <form action="{% url 'stores__create' %}" method="post" class="my-3">
                     {% csrf_token %}
-                    {% if stores %}
-                        {% include '../components/forms/create_store.html' with form_legend="Добавить склад" %}
-                    {% else %}
-                        {% include '../components/forms/create_store.html' with form_legend="Нету складов" %}
-                    {% endif %}
+                    <legend class="lead text-center mb-4">
+                        {% if stores %}
+                            Добавить склад
+                        {% else %}
+                            Нету складов
+                        {% endif %}
+                    </legend>
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Название склада</label>
+                        {{ form.name | add_class:"form-control" }}
+                        <p class="form-text">Указывать строго как маркетплейсе</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.marketplace_store_id.id_for_label }}" class="form-label">ID склада</label>
+                        {{ form.marketplace_store_id | add_class:"form-control" }}
+                        <p class="form-text">Указывать строго как маркетплейсе</p>
+                    </div>
+                    {% for key, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    <button class="btn btn-secondary" type="submit">Добавить</button>
                 </form>
             </div>
         </div>
