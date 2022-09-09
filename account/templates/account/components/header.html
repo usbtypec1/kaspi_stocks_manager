@@ -40,12 +40,24 @@
                     </li>
                 </ul>
                 {% if user.is_authenticated %}
-                    <button class="btn btn-outline-secondary rounded-pill" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">Выход
-                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary rounded-pill" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            Профиль
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                            <li>
+                                <a class="dropdown-item" role="button">Сменить пароль</a>
+                            </li>
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout-modal">
+                                    Выйти
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
+                    <div class="modal fade" id="logout-modal" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <form method="post" action="{% url 'accounts__logout' %}">
@@ -67,9 +79,9 @@
                             </div>
                         </div>
                     </div>
+
                 {% endif %}
             </div>
         </div>
     </nav>
-
 </header>
