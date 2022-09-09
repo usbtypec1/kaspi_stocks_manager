@@ -13,6 +13,7 @@ from .views import (
     StoresListView,
     StoreCreateView,
     StoreUpdateView,
+    StoreDeleteView,
 )
 
 
@@ -20,6 +21,7 @@ stores_patterns = [
     path('', StoresListView.as_view(), name='stores__list'),
     path('create/', StoreCreateView.as_view(), name='stores__create'),
     path('<int:store_id>/', StoreUpdateView.as_view(), name='stores__update'),
+    path('<int:store_id>/delete/', StoreDeleteView.as_view(), name='stores__delete'),
 ]
 
 

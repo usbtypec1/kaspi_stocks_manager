@@ -165,4 +165,14 @@ class StoreUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('stores__list')
 
     def get_object(self, store_id=None):
-        return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'))
+        return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'), user=self.request.user)
+
+
+class StoreDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'account/pages/store_delete.html'
+    context_object_name = 'store'
+    pk_url_kwarg = 'store_id'
+    success_url = reverse_lazy('stores__list')
+
+    def get_object(self, store_id=None):
+        return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'), user=self.request.user)

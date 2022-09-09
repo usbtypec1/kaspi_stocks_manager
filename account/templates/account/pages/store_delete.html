@@ -1,0 +1,19 @@
+{% extends '../base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}
+    Удалить склад {{ store.name }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <form class="mt-5 text-center" method="post" action="{% url 'stores__delete' store.id %}">
+            {% csrf_token %}
+            <h3 class="my-4">Вы действительно хотите удалить склад {{ store.name }}?</h3>
+            <a class="btn btn-secondary mx-1" href="{% url 'stores__list' %}">Назад</a>
+            <button class="btn btn-danger mx-1" type="submit">Удалить</button>
+        </form>
+    </div>
+{% endblock %}
