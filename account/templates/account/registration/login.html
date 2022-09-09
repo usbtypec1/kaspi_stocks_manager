@@ -20,7 +20,7 @@
                     <legend>Авторизация</legend>
                     <div class="mb-3">
                         <label for="{{ form.username.id_for_label }}" class="form-label">Email</label>
-                        {{ form.username | attr:"type:email" | attr:"class:form-control" }}
+                        {{ form.username | attr:"type:email" | attr:"class:form-control" | attr:"inputmode:email" }}
                     </div>
                     <div class="mb-3">
                         <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
