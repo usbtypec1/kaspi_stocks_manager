@@ -3,7 +3,8 @@ import datetime
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import (
@@ -26,6 +27,27 @@ class OfferDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
+
+
+class OfferCreateView(LoginRequiredMixin, CreateView):
+    form_class = CreateOfferForm
+    template_name = 'account/pages/offer_create.html'
+    success_url = reverse_lazy('companies__detail')
+
+
+class OffersListView(LoginRequiredMixin, ListView):
+    allow_empty = False
+    template_name = 'account/pages/offers.html'
+
+    def get_queryset(self):
+        return Offer.objects.filter(company__user=self.request.user)
+
+    def dispatch(self, *args, **kwargs):
+        try:
+            super().dispatch(*args, **kwargs)
+            print('here')
+        except Http404:
+            return reverse('offers__create')
 
 
 class OfferUpdateView(LoginRequiredMixin, UpdateView):
@@ -69,11 +91,10 @@ class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
         return super().form_valid(form)
 
 
-class CompanyView(LoginRequiredMixin, DetailView):
-    model = Company
+class CompanyUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'company_id'
     context_object_name = 'company'
-    extra_context = {'form': CreateOfferForm()}
+    form_class = CreateCompanyForm
     template_name = 'account/pages/company.html'
 
     def get_object(self, queryset=None):
@@ -83,21 +104,13 @@ class CompanyView(LoginRequiredMixin, DetailView):
             raise PermissionDenied
         return company
 
-    def post(self, *args, company_id=None, **kwargs):
-        print(args)
-        print(kwargs)
-        data = self.request.POST.copy()
-        data['company_id'] = [company_id]
-        form = CreateOfferForm(data)
-        print(data)
-        if form.is_valid():
-            form.save()
-        return reverse('companies__detail', kwargs={'company_id': company_id})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['companies'] = self.request.user.company_set.all()
-        context_data['offers'] = self.object.offer_set.all()
         return context_data
 
 
@@ -110,7 +123,7 @@ def xml_data_view(request, company_id):
     offers = Offer.objects.filter(company=company_id)
     now = timezone.now() + datetime.timedelta(hours=3)
     context = {'date': now.date().isoformat(), 'company': company, 'offers': offers,
-               'stores': OffersStore.objects.filter(company=company)}
+               'stores': OffersStore.objects.filter(user=company.user)}
     return render(request, 'account/offers.xml', context=context, content_type='text/xml')
 
 

@@ -1,0 +1,47 @@
+{% extends '../base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}
+    Добавить товар - {{ company.name }}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'account/assets/styles/forms.css' %}">
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'offers__create' company.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        <legend class="lead text-center mb-4">{{ form_legend }}</legend>
+        <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Название товара</label>
+            {{ form.name | add_class:"form-control" }}
+            <p class="form-text">Указывать строго как маркетплейсе</p>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.sku.id_for_label }}" class="form-label">SKU товара</label>
+            {{ form.sku | add_class:"form-control" }}
+            <p class="form-text">Указывать строго как маркетплейсе</p>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.brand.id_for_label }}" class="form-label">Бренд</label>
+            {{ form.brand | add_class:"form-control" }}
+            <p class="form-text">Необязательно</p>
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.price.id_for_label }}" class="form-label">Цена</label>
+            {{ form.price | add_class:"form-control" }}
+            <p class="form-text">Указывать строго как в маркетплейсе</p>
+        </div>
+        {% for key, errors in form.errors.items %}
+            {% for error in errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <button class="btn btn-secondary" type="submit">Добавить</button>
+    </form>
+{% endblock %}

@@ -6,53 +6,49 @@
     {{ company.name }}
 {% endblock %}
 
+{% block head %}
+    <link href="{% static 'account/assets/styles/forms.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
     <div class="container">
-        {% if offers %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th scope="col">SKU</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Бренд</th>
-                        <th scope="col">Цена</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for offer in offers %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'offers__update' company.id offer.id %}">
-                                    <img src="{% static 'account/assets/svg/icon_pen.svg' %}">
-                                </a>
-                            </td>
-                            <td>{{ offer.sku }}</td>
-                            <td>{{ offer.name }}</td>
-                            <td>
-                                {% if offer.brand %}
-                                    {{ offer.brand }}
-                                {% endif %}
-                            </td>
-                            <td>{{ offer.price }}₸</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+        <div class="row gx-4 gy-4 mt-4">
+            <div class="col-sm-12 col-md-4">
+                <form method="post" action="{% url 'companies__update' company.id %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Изменить данные партнера</legend>
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Название</label>
+                            {{ form.name | attr:"class:form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.merchant_id.id_for_label }}" class="form-label">ID партнера</label>
+                            {{ form.merchant_id | attr:"class:form-control" }}
+                        </div>
+                        {% for key, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        <button class="btn btn-primary" type="submit">Сохранить</button>
+                    </fieldset>
+                </form>
             </div>
-            <div>
-                <p>Ваша ссылка для XML файла</p>
+            <div class="col-sm-12 col-md-7 offset-md-1">
+                <p class="lead">Ваша ссылка для XML файла</p>
                 <div class="d-flex">
-                    <input id="js-xml-file-link" class="form-control border rounded-0"
+                    <input id="js-xml-file-link" class="form-control border d-none d-sm-block me-1"
                            value="http://{{ request.get_host }}{% url 'offers__xml' company.id %}" readonly>
-                    <a class="btn btn-outline-dark"
+                    <a class="btn btn-outline-dark me-1"
                        href="http://{{ request.get_host }}{% url 'offers__xml' company.id %}">Открыть</a>
-
+                    <a class="btn btn-outline-primary" download="{{ company.name }} выгрузка"
+                       href="http://{{ request.get_host }}{% url 'offers__xml' company.id %}">Скачать</a>
                 </div>
+                <a class="btn btn-outline-primary my-3 w-100" href="">Открыть список товаров</a>
             </div>
-        {% else %}
-            {% include '../components/forms/create_offer.html' with form_legend="Нет товаров" %}
-        {% endif %}
+        </div>
     </div>
 {% endblock %}

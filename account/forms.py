@@ -25,7 +25,8 @@ class CreateCompanyForm(forms.ModelForm):
 class CreateOfferForm(forms.ModelForm):
     class Meta:
         model = Offer
-        fields = ('sku', 'name', 'brand', 'price', 'available_stores')
+        fields = '__all__'
+        # fields = ('sku', 'name', 'brand', 'price', 'available_stores')
 
 
 class CreateStoreForm(forms.ModelForm):

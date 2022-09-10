@@ -20,7 +20,7 @@
                             <ul class="dropdown-menu">
                                 {% for company in companies %}
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'companies__detail' company.id %}">
+                                        <a class="dropdown-item" href="{% url 'companies__update' company.id %}">
                                             {{ company.name }}
                                         </a>
                                     </li>

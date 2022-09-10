@@ -62,6 +62,9 @@ class Company(models.Model):
         verbose_name = 'магазин'
         verbose_name_plural = 'магазины'
 
+    def get_absolute_url(self):
+        return reverse('companies__update', kwargs={'company_id': self.id})
+
 
 class OffersStore(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
