@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from django.contrib.auth import models as auth_models
 from django.db import models
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy
 
@@ -50,7 +51,6 @@ class User(auth_models.AbstractUser):
 
 
 class Company(models.Model):
-    uuid = models.UUIDField(default=uuid4, unique=True, editable=False)
     name = models.CharField(max_length=255, unique=True)
     merchant_id = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
