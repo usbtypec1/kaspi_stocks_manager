@@ -16,6 +16,7 @@ from .views import (
     StoreDeleteView,
     OfferCreateView,
     CompanyCreateView,
+    CompanyDeleteView,
 )
 
 
@@ -31,6 +32,7 @@ companies_patterns = [
     path('', CompaniesPageView.as_view(), name='companies__list'),
     path('create/', CompanyCreateView.as_view(), name='companies__create'),
     path('<int:company_id>/', CompanyUpdateView.as_view(), name='companies__update'),
+    path('<int:company_id>/delete/', CompanyDeleteView.as_view(), name='companies__delete'),
     path('<int:company_id>/offers/create/', OfferCreateView.as_view(), name='offers__create'),
     path('<int:company_id>/offers/<int:offer_id>/', OfferUpdateView.as_view(), name='offers__update'),
     path('<int:company_id>/offers/<int:offer_id>/delete/', OfferDeleteView.as_view(), name='offers__delete'),

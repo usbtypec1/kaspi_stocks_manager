@@ -127,6 +127,15 @@ class CompanyCreateView(CreateView):
         return reverse('companies__list', kwargs={'form': form})
 
 
+class CompanyDeleteView(DeleteView):
+    pk_url_kwarg = 'company_id'
+    context_object_name = 'company'
+    success_url = reverse_lazy('companies__list')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Company, user=self.request.user, id=self.kwargs.get('company_id'))
+
+
 def error_404_view(request, *args):
     return render(request, 'account/errors/404.html')
 

@@ -34,6 +34,9 @@
                             {% endfor %}
                         {% endfor %}
                         <button class="btn btn-primary" type="submit">Сохранить</button>
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+                                data-bs-target="#delete-company-modal">Удалить
+                        </button>
                     </fieldset>
                 </form>
             </div>
@@ -51,4 +54,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="delete-company-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" action="{% url 'companies__delete' company.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Хотите удалить партнера?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Закрыть
+                        </button>
+                        <button type="submit" class="btn btn-danger">Подтвердить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
