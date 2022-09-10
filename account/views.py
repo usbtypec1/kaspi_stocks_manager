@@ -114,6 +114,19 @@ class CompanyUpdateView(LoginRequiredMixin, UpdateView):
         return context_data
 
 
+class CompanyCreateView(CreateView):
+    pk_url_kwarg = 'company_id'
+    context_object_name = 'company'
+    form_class = CreateCompanyForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return reverse('companies__list', kwargs={'form': form})
+
+
 def error_404_view(request, *args):
     return render(request, 'account/errors/404.html')
 
