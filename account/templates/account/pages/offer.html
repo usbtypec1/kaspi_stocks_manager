@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <form method="post">
+                <form method="post" action="{% url 'offers__delete' company_id offer.id %}">
                     {% csrf_token %}
                     <fieldset>
                         <legend>Товар: {{ offer.name }}</legend>
@@ -42,7 +42,7 @@
                                 </div>
                             {% endfor %}
                         {% endfor %}
-                        <a href="{% url 'companies__detail' company_id %}"
+                        <a href="{% url 'offers__list' company_id %}"
                            class="btn btn-outline-secondary">Назад</a>
                         <a href="{% url 'offers__delete' company_id offer.id %}"
                            class="btn btn-outline-danger">Удалить</a>

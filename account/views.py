@@ -26,28 +26,48 @@ class OfferDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'account/pages/offer_delete.html'
 
     def get_success_url(self):
-        return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
+        return reverse('offers__list', kwargs={'company_id': self.kwargs['company_id']})
 
 
 class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = CreateOfferForm
     template_name = 'account/pages/offer_create.html'
-    success_url = reverse_lazy('companies__detail')
+
+    def get_success_url(self):
+        return reverse('offers__list', kwargs={'company_id': self.kwargs.get('company_id')})
+
+    def form_valid(self, form):
+        company = get_object_or_404(Company, id=self.kwargs.get('company_id'))
+        if company.user != self.request.user:
+            raise PermissionDenied
+        form.instance.company = company
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['company_id'] = self.kwargs.get('company_id')
+        return context
 
 
 class OffersListView(LoginRequiredMixin, ListView):
     allow_empty = False
+    context_object_name = 'offers'
     template_name = 'account/pages/offers.html'
 
     def get_queryset(self):
         return Offer.objects.filter(company__user=self.request.user)
 
-    def dispatch(self, *args, **kwargs):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['company_id'] = self.kwargs.get('company_id')
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
         try:
-            super().dispatch(*args, **kwargs)
-            print('here')
+            return super().dispatch(request, *args, **kwargs)
         except Http404:
-            return reverse('offers__create')
+            company_id = self.kwargs.get('company_id')
+            return redirect(reverse('offers__create', kwargs={'company_id': company_id}))
 
 
 class OfferUpdateView(LoginRequiredMixin, UpdateView):

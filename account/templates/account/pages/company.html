@@ -50,7 +50,9 @@
                     <a class="btn btn-outline-primary" download="{{ company.name }} выгрузка"
                        href="http://{{ request.get_host }}{% url 'offers__xml' company.id %}">Скачать</a>
                 </div>
-                <a class="btn btn-outline-primary my-3 w-100" href="">Открыть список товаров</a>
+                <a class="btn btn-outline-primary my-3 w-100" href="{% url 'offers__list' company.id %}">
+                    Открыть список товаров
+                </a>
             </div>
         </div>
     </div>
