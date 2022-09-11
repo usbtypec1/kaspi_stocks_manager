@@ -13,39 +13,38 @@
 
 {% block body %}
     <div class="container">
-        {% if offers %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
+        <div class="table-responsive my-4">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Название</th>
+                    <th scope="col">SKU</th>
+                    <th scope="col">Бренд</th>
+                    <th scope="col">Цена</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                {% for offer in offers %}
                     <tr>
-                        <th></th>
-                        <th scope="col">SKU</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Бренд</th>
-                        <th scope="col">Цена</th>
-                        <th></th>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ offer.name }}</td>
+                        <td>{{ offer.sku }}</td>
+                        <td>
+                            {% if offer.brand %}
+                                {{ offer.brand }}
+                            {% endif %}
+                        </td>
+                        <td>{{ offer.price }}₸</td>
+                        <td class="text-end">
+                            <a class="btn btn-warning"
+                               href="{% url 'offers__update' company_id offer.id %}">Изменить</a>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for offer in offers %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ offer.sku }}</td>
-                            <td>{{ offer.name }}</td>
-                            <td>
-                                {% if offer.brand %}
-                                    {{ offer.brand }}
-                                {% endif %}
-                            </td>
-                            <td>{{ offer.price }}₸</td>
-                            <td class="text-end">
-                                <a class="btn btn-warning" href="{% url 'offers__update' company_id offer.id %}">Изменить</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
