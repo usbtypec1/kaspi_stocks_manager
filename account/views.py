@@ -104,24 +104,6 @@ class OfferUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView)
         return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
 
 
-class CompaniesPageView(LoginRequiredMixin, FormMixin, CompaniesContextDataMixin, ListView):
-    template_name = 'account/pages/companies.html'
-    model = Company
-    form_class = CreateCompanyForm
-    context_object_name = 'companies'
-    success_url = reverse_lazy('companies__index')
-
-    post = ProcessFormView.post
-
-    def get_queryset(self):
-        return Company.objects.filter(user=self.request.user)
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.save()
-        return super().form_valid(form)
-
-
 class CompanyUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView):
     pk_url_kwarg = 'company_id'
     context_object_name = 'company'
@@ -198,9 +180,15 @@ class LogoutView(auth_views.LogoutView):
     get = TemplateView.get
 
 
-class AccountsIndexView(RedirectView):
+class AccountsIndexView(LoginRequiredMixin, RedirectView):
     permanent = True
     pattern_name = 'companies__list'
+
+    def get_redirect_url(self, *args, **kwargs):
+        company = Company.objects.filter(user=self.request.user).order_by('id').first()
+        if company is None:
+            return reverse('companies__create')
+        return reverse('companies__update', kwargs={'company_id': company.id})
 
 
 class StoreCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView):
