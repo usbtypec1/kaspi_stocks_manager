@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -9,7 +10,6 @@ from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import (
     ListView,
-    DetailView,
     TemplateView,
     RedirectView,
     DeleteView,
@@ -191,7 +191,7 @@ class LogoutView(auth_views.LogoutView):
 
 class AccountsIndexView(RedirectView):
     permanent = True
-    pattern_name = 'companies__index'
+    pattern_name = 'companies__list'
 
 
 class StoreCreateView(LoginRequiredMixin, CreateView):
@@ -231,3 +231,9 @@ class StoreDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, store_id=None):
         return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'), user=self.request.user)
+
+
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = 'account/registration/change_password.html'
+    form_class = auth_forms.PasswordChangeForm
+    success_url = reverse_lazy('accounts__index')
