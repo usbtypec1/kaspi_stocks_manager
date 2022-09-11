@@ -16,7 +16,6 @@ from django.views.generic import (
     UpdateView,
     CreateView,
 )
-from django.views.generic.edit import FormMixin, ProcessFormView
 
 from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateStoreForm
 from .models import Company, Offer, OffersStore
@@ -66,7 +65,7 @@ class OffersListView(LoginRequiredMixin, CompaniesContextDataMixin, ListView):
     template_name = 'account/pages/offers.html'
 
     def get_queryset(self):
-        return Offer.objects.filter(company__user=self.request.user)
+        return Offer.objects.filter(company__user=self.request.user).order_by('name')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
