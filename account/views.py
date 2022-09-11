@@ -22,6 +22,17 @@ from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateS
 from .models import Company, Offer, OffersStore
 
 
+class CompaniesContextDataMixin:
+
+    def get_user_companies(self):
+        return Company.objects.filter(user=self.request.user)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['companies'] = self.get_user_companies()
+        return context
+
+
 class OfferDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'account/pages/offer_delete.html'
 
@@ -29,7 +40,7 @@ class OfferDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('offers__list', kwargs={'company_id': self.kwargs['company_id']})
 
 
-class OfferCreateView(LoginRequiredMixin, CreateView):
+class OfferCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView):
     form_class = CreateOfferForm
     template_name = 'account/pages/offer_create.html'
 
@@ -49,7 +60,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class OffersListView(LoginRequiredMixin, ListView):
+class OffersListView(LoginRequiredMixin, CompaniesContextDataMixin, ListView):
     allow_empty = False
     context_object_name = 'offers'
     template_name = 'account/pages/offers.html'
@@ -70,7 +81,7 @@ class OffersListView(LoginRequiredMixin, ListView):
             return redirect(reverse('offers__create', kwargs={'company_id': company_id}))
 
 
-class OfferUpdateView(LoginRequiredMixin, UpdateView):
+class OfferUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView):
     template_name = 'account/pages/offer.html'
     queryset = Offer.objects.all()
     context_object_name = 'offer'
@@ -93,7 +104,7 @@ class OfferUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
 
 
-class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
+class CompaniesPageView(LoginRequiredMixin, FormMixin, CompaniesContextDataMixin, ListView):
     template_name = 'account/pages/companies.html'
     model = Company
     form_class = CreateCompanyForm
@@ -111,7 +122,7 @@ class CompaniesPageView(LoginRequiredMixin, FormMixin, ListView):
         return super().form_valid(form)
 
 
-class CompanyUpdateView(LoginRequiredMixin, UpdateView):
+class CompanyUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView):
     pk_url_kwarg = 'company_id'
     context_object_name = 'company'
     form_class = CreateCompanyForm
@@ -134,17 +145,15 @@ class CompanyUpdateView(LoginRequiredMixin, UpdateView):
         return context_data
 
 
-class CompanyCreateView(CreateView):
+class CompanyCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView):
     pk_url_kwarg = 'company_id'
     context_object_name = 'company'
     form_class = CreateCompanyForm
+    template_name = 'account/pages/company_create.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return reverse('companies__list', kwargs={'form': form})
 
 
 class CompanyDeleteView(DeleteView):
@@ -194,7 +203,7 @@ class AccountsIndexView(RedirectView):
     pattern_name = 'companies__list'
 
 
-class StoreCreateView(LoginRequiredMixin, CreateView):
+class StoreCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView):
     success_url = reverse_lazy('stores__list')
     form_class = CreateStoreForm
 
@@ -203,7 +212,7 @@ class StoreCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class StoresListView(LoginRequiredMixin, ListView):
+class StoresListView(LoginRequiredMixin, CompaniesContextDataMixin, ListView):
     template_name = 'account/pages/stores.html'
     context_object_name = 'stores'
     extra_context = {'form': CreateStoreForm()}
@@ -212,7 +221,7 @@ class StoresListView(LoginRequiredMixin, ListView):
         return OffersStore.objects.filter(user=self.request.user)
 
 
-class StoreUpdateView(LoginRequiredMixin, UpdateView):
+class StoreUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView):
     template_name = 'account/pages/store.html'
     context_object_name = 'store'
     form_class = CreateStoreForm
@@ -223,7 +232,7 @@ class StoreUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'), user=self.request.user)
 
 
-class StoreDeleteView(LoginRequiredMixin, DeleteView):
+class StoreDeleteView(LoginRequiredMixin, CompaniesContextDataMixin, DeleteView):
     template_name = 'account/pages/store_delete.html'
     context_object_name = 'store'
     pk_url_kwarg = 'store_id'
@@ -233,7 +242,7 @@ class StoreDeleteView(LoginRequiredMixin, DeleteView):
         return get_object_or_404(OffersStore, pk=self.kwargs.get('store_id'), user=self.request.user)
 
 
-class PasswordChangeView(auth_views.PasswordChangeView):
+class PasswordChangeView(CompaniesContextDataMixin, auth_views.PasswordChangeView):
     template_name = 'account/registration/change_password.html'
     form_class = auth_forms.PasswordChangeForm
     success_url = reverse_lazy('accounts__index')
