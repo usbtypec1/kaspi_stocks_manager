@@ -45,7 +45,7 @@
                 <div class="d-flex">
                     <input id="js-xml-file-link" class="form-control border d-none d-sm-block me-1"
                            value="http://{{ request.get_host }}{% url 'offers__xml' company.id %}" readonly>
-                    <a class="btn btn-outline-dark me-1"
+                    <a class="btn btn-outline-dark me-1" target="_blank"
                        href="http://{{ request.get_host }}{% url 'offers__xml' company.id %}">Открыть</a>
                     <a class="btn btn-outline-primary" download="{{ company.name }} выгрузка"
                        href="http://{{ request.get_host }}{% url 'offers__xml' company.id %}">Скачать</a>

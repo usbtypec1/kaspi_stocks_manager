@@ -8,7 +8,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <form action="{% url 'offers__create' company_id %}" method="post" class="my-3">
                     {% csrf_token %}
-                    <legend class="lead text-center mb-4">{{ form_legend }}</legend>
+                    <legend class="mb-4">Добавить товар</legend>
                     <div class="mb-3">
                         <label for="{{ form.name.id_for_label }}" class="form-label">Название товара</label>
                         {{ form.name | add_class:"form-control" }}
