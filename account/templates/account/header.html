@@ -1,55 +1,55 @@
 {% load widget_tweaks %}
 {% load static %}
 
-<header class="shadow-sm">
-    <nav class="navbar navbar-expand-lg bg-white">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'companies__list' %}">Главная</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if companies %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Магазины
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% for company in companies %}
+{% if user.is_authenticated %}
+    <header class="shadow-sm">
+        <nav class="navbar navbar-expand-lg bg-white">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'companies__list' %}">Главная</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if companies %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Магазины
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for company in companies %}
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'companies__update' company.id %}">
+                                                {{ company.name }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'companies__update' company.id %}">
-                                            {{ company.name }}
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'companies__create' %}" role="button">
+                                            <img src="{% static 'account/assets/svg/icon_plus.svg' %}">
+                                            Добавить магазин
                                         </a>
                                     </li>
-                                {% endfor %}
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'companies__create' %}" role="button">
-                                        <img src="{% static 'account/assets/svg/icon_plus.svg' %}">
-                                        Добавить магазин
-                                    </a>
-                                </li>
-                            </ul>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts__faq' %}">
+                                Помощь
+                            </a>
                         </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts__faq' %}">
-                            Помощь
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'stores__list' %}" class="nav-link">
-                            Склады
-                        </a>
-                    </li>
-                </ul>
-                {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'stores__list' %}" class="nav-link">
+                                Склады
+                            </a>
+                        </li>
+                    </ul>
                     <div class="dropdown">
                         <button class="btn btn-outline-secondary rounded-pill" type="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -91,8 +91,8 @@
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
+{% endif %}
