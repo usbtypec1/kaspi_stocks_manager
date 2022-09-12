@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    Страница не найдена
+    Неправильный запрос
 {% endblock %}
 
 {% block body %}
@@ -11,12 +11,12 @@
         <div class="row align-items-center mt-5">
             <div class="col-lg-4 col-sm-12">
                 <div class="d-flex flex-column gap-4">
-                    <h1 class="text-body text-center">Страница не найдена</h1>
+                    <h1 class="text-body text-center">Неправильный запрос</h1>
                     <a class="btn btn-outline-secondary" href="{% url 'accounts__index' %}">На главную страницу</a>
                 </div>
             </div>
             <div class="col-lg-8 col-sm-12">
-                <img class="w-100 my-3" src="{% static 'account/assets/svg/404.svg' %}" alt="404 not found">
+                <img class="w-100 my-3" src="{% static 'account/assets/svg/400.svg' %}" alt="400 bad request">
             </div>
         </div>
     </main>
