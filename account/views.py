@@ -150,6 +150,18 @@ def error_404_view(request, *args):
     return render(request, 'account/errors/404.html')
 
 
+def error_403_view(request, *args):
+    return render(request, 'account/errors/403.html')
+
+
+def error_400_view(request, *args):
+    return render(request, 'account/errors/400.html')
+
+
+def error_500_view(request, *args):
+    return render(request, 'account/errors/500.html')
+
+
 def xml_data_view(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     offers = Offer.objects.filter(company=company_id)
