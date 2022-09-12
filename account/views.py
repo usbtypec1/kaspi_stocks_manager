@@ -246,3 +246,7 @@ class PasswordChangeView(CompaniesContextDataMixin, auth_views.PasswordChangeVie
     template_name = 'account/registration/change_password.html'
     form_class = auth_forms.PasswordChangeForm
     success_url = reverse_lazy('accounts__index')
+
+
+class FAQPageView(CompaniesContextDataMixin, TemplateView):
+    template_name = 'account/pages/faq.html'

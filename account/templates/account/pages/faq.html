@@ -1,0 +1,56 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+    FAQ
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <section class="my-5">
+            <h3>Добавление магазина</h3>
+            <p>
+                Войдите в кабинет продавца
+                <a class="link-primary" target="_blank" href="https://kaspi.kz/merchantcabinet">
+                    https://kaspi.kz/merchantcabinet</a>.
+            </p>
+            <p>Зайдите в настройки, выберите раздел <u>общая информация</u>. Используйте эти данные чтобы
+                <a class="link-primary" target="_blank" href="{% url 'companies__create' %}">
+                    добавить магазин</a>
+                в нашу систему.
+            </p>
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#merchant-info-collapse"
+                    aria-expanded="false">
+                Показать на примере
+            </button>
+            <div class="collapse my-3" id="merchant-info-collapse">
+                <div class="card card-body">
+                    <img class="img-fluid rounded" src="{% static 'account/assets/img/merchant-info.png' %}"
+                         alt="merchant info">
+                </div>
+            </div>
+        </section>
+        <section class="my-5">
+            <h3>Добавление склада</h3>
+            <p>Далее нужно добавить информацию о ваших складах в нашу систему.</p>
+            <p>В кабинете продавца зайдите в настроки, выберите раздел <u>склады и магазины</u>. Нам нужно поле
+                <u>имя</u>,
+                которое будет использовано в качестве ID склада.</p>
+            <p>Добавить склад можете <a class="link-primary" target="_blank" href="{% url 'stores__list' %}">тут</a>.
+            </p>
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#store-info-collapse"
+                    aria-expanded="false">
+                Показать на примере
+            </button>
+            <div class="collapse my-3" id="store-info-collapse">
+                <div class="card card-body">
+                    <img class="img-fluid rounded" src="{% static 'account/assets/img/store-info.png' %}"
+                         alt="stores info">
+                </div>
+            </div>
+        </section>
+
+    </div>
+{% endblock %}

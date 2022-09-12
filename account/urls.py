@@ -18,6 +18,7 @@ from .views import (
     CompanyDeleteView,
     OffersListView,
     PasswordChangeView,
+    FAQPageView,
 )
 
 
@@ -47,6 +48,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='accounts__register'),
     path('password-change', PasswordChangeView.as_view(), name='accounts__change-password'),
     path('', AccountsIndexView.as_view(), name='accounts__index'),
+    path('faq/', FAQPageView.as_view(), name='accounts__faq'),
     path('companies/', include(companies_patterns)),
     path('stores/', include(stores_patterns)),
 ]
