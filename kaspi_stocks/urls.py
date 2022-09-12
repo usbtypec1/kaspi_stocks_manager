@@ -6,7 +6,7 @@ urlpatterns = [
     path('accounts/', include('account.urls')),
 ]
 
-handler400 = 'account.views.error_400.view'
+handler400 = 'account.views.error_400_view'
 handler404 = 'account.views.error_404_view'
 handler403 = 'account.views.error_403_view'
-handler500 = 'account.views.error_500.view'
+handler500 = 'account.views.error_500_view'
