@@ -33,7 +33,8 @@ class CompaniesContextDataMixin:
 
 
 class OfferDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/pages/offer_delete.html'
+    model = Offer
+    pk_url_kwarg = 'offer_id'
 
     def get_success_url(self):
         return reverse('offers__list', kwargs={'company_id': self.kwargs['company_id']})
@@ -100,7 +101,7 @@ class OfferUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView)
         return data
 
     def get_success_url(self):
-        return reverse('companies__detail', kwargs={'company_id': self.kwargs['company_id']})
+        return reverse('offers__list', kwargs={'company_id': self.kwargs['company_id']})
 
 
 class CompanyUpdateView(LoginRequiredMixin, CompaniesContextDataMixin, UpdateView):

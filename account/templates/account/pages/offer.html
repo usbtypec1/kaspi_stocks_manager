@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <form method="post" action="{% url 'offers__delete' company_id offer.id %}">
+                <form method="post" action="{% url 'offers__update' company_id offer.id %}">
                     {% csrf_token %}
                     <fieldset>
                         <legend>Товар: {{ offer.name }}</legend>
@@ -44,11 +44,34 @@
                         {% endfor %}
                         <a href="{% url 'offers__list' company_id %}"
                            class="btn btn-outline-secondary">Назад</a>
-                        <a href="{% url 'offers__delete' company_id offer.id %}"
-                           class="btn btn-outline-danger">Удалить</a>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-modal">
+                            Удалить
+                        </a>
                         <button type="submit" class="btn btn-outline-success my-2">Сохранить</button>
-
                     </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" action="{% url 'offers__delete' company_id offer.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Хотите удалить товар {{ offer.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Закрыть
+                        </button>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </div>
                 </form>
             </div>
         </div>
