@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import environ
@@ -98,3 +99,11 @@ AUTH_USER_MODEL = 'account.User'
 
 LOGIN_REDIRECT_URL = '/accounts/companies/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
+
+OFFER_FILES_ROOT = MEDIA_ROOT / 'offers'
+
+if not OFFER_FILES_ROOT.exists():
+    os.makedirs(OFFER_FILES_ROOT)
