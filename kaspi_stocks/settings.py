@@ -105,5 +105,12 @@ MEDIA_URL = 'media/'
 
 OFFER_FILES_ROOT = MEDIA_ROOT / 'offers'
 
+INTERNAL_IPS = []
+
 if not OFFER_FILES_ROOT.exists():
     os.makedirs(OFFER_FILES_ROOT)
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS.append('127.0.0.1')
