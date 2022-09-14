@@ -1,10 +1,12 @@
 import datetime
+from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.http import Http404, FileResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
@@ -17,8 +19,9 @@ from django.views.generic import (
     CreateView,
 )
 
-from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateStoreForm
+from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateStoreForm, OffersBatchUploadForm
 from .models import Company, Offer, OffersStore
+from .services import generate_offers_xlsx
 
 
 class CompaniesContextDataMixin:
@@ -43,6 +46,9 @@ class OfferDeleteView(LoginRequiredMixin, DeleteView):
 class OfferCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView):
     form_class = CreateOfferForm
     template_name = 'account/pages/offer_create.html'
+    extra_context = {'offers_batch_upload_form': OffersBatchUploadForm()}
+    context_object_name = 'company'
+    pk_url_kwarg = 'company_id'
 
     def get_success_url(self):
         return reverse('offers__list', kwargs={'company_id': self.kwargs.get('company_id')})
@@ -56,7 +62,8 @@ class OfferCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['company_id'] = self.kwargs.get('company_id')
+        company_id = self.kwargs.get('company_id')
+        context['company'] = context['companies'].get(id=company_id)
         return context
 
 
@@ -250,3 +257,11 @@ class PasswordChangeView(CompaniesContextDataMixin, auth_views.PasswordChangeVie
 
 class FAQPageView(CompaniesContextDataMixin, TemplateView):
     template_name = 'account/pages/faq.html'
+
+
+def download_offers_xlsx_view(request, company_id=None):
+    company = Company.objects.get(pk=company_id)
+    file_path = Path.joinpath(settings.OFFER_FILES_ROOT, f'{company.id}.xlsx')
+    generate_offers_xlsx(file_path, company)
+    file_buffer = open(file_path, 'rb')
+    return FileResponse(file_buffer, as_attachment=True, filename=f'{company.name} - товары.xlsx')

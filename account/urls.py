@@ -19,8 +19,8 @@ from .views import (
     OffersListView,
     PasswordChangeView,
     FAQPageView,
+    download_offers_xlsx_view,
 )
-
 
 stores_patterns = [
     path('', StoresListView.as_view(), name='stores__list'),
@@ -28,7 +28,6 @@ stores_patterns = [
     path('<int:store_id>/', StoreUpdateView.as_view(), name='stores__update'),
     path('<int:store_id>/delete/', StoreDeleteView.as_view(), name='stores__delete'),
 ]
-
 
 companies_patterns = [
     path('', AccountsIndexView.as_view(), name='companies__list'),
@@ -40,6 +39,7 @@ companies_patterns = [
     path('<int:company_id>/offers/<int:offer_id>/', OfferUpdateView.as_view(), name='offers__update'),
     path('<int:company_id>/offers/<int:offer_id>/delete/', OfferDeleteView.as_view(), name='offers__delete'),
     path('<int:company_id>/offers/xml/', xml_data_view, name='offers__xml'),
+    path('<int:company_id>/offers/excel/', download_offers_xlsx_view, name='offers__excel'),
 ]
 
 urlpatterns = [

@@ -32,3 +32,7 @@ class CreateStoreForm(forms.ModelForm):
     class Meta:
         model = OffersStore
         fields = ('name', 'marketplace_store_id')
+
+
+class OffersBatchUploadForm(forms.Form):
+    file = forms.FileField()
