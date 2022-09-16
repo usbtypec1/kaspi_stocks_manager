@@ -114,3 +114,6 @@ if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS.append('127.0.0.1')
+
+
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
