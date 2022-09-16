@@ -1,12 +1,13 @@
 import datetime
 from pathlib import Path
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import Http404, FileResponse
+from django.http import Http404, FileResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
@@ -21,7 +22,7 @@ from django.views.generic import (
 
 from .forms import UserCreationForm, CreateCompanyForm, CreateOfferForm, CreateStoreForm, OffersBatchUploadForm
 from .models import Company, Offer, OffersStore
-from .services import generate_offers_xlsx
+from .services import generate_offers_xlsx, parse_offers_xlsx, FileExchange
 
 
 class CompaniesContextDataMixin:
@@ -64,6 +65,8 @@ class OfferCreateView(LoginRequiredMixin, CompaniesContextDataMixin, CreateView)
         context = super().get_context_data(**kwargs)
         company_id = self.kwargs.get('company_id')
         context['company'] = context['companies'].get(id=company_id)
+        if self.request.GET.get('processing') == 'True':
+            context['is_xlsx_processing'] = True
         return context
 
 
@@ -259,9 +262,29 @@ class FAQPageView(CompaniesContextDataMixin, TemplateView):
     template_name = 'account/pages/faq.html'
 
 
-def download_offers_xlsx_view(request, company_id=None):
+def offers_xlsx_download_view(request, *args, company_id=None, **kwargs):
     company = Company.objects.get(pk=company_id)
     file_path = Path.joinpath(settings.OFFER_FILES_ROOT, f'{company.id}.xlsx')
     generate_offers_xlsx(file_path, company)
     file_buffer = open(file_path, 'rb')
     return FileResponse(file_buffer, as_attachment=True, filename=f'{company.name} - товары.xlsx')
+
+
+def offers_xlsx_upload_view(request, *args, company_id=None, **kwargs):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['get'])
+    form = OffersBatchUploadForm(files=request.FILES)
+
+    query_params = {}
+    if form.is_valid():
+        file_bytes = form.cleaned_data['file'].file.read()
+        file_name = f'upload-{company_id}.xlsx'
+
+        file_exchange = FileExchange(file_name)
+        file_exchange.write(file_bytes)
+
+        parse_offers_xlsx.delay(file_name, company_id)
+        query_params['processing'] = True
+
+    query_params = urlencode(query_params)
+    return redirect(reverse('offers__create', kwargs={'company_id': company_id}) + f'?{query_params}')
